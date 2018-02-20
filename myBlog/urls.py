@@ -21,4 +21,5 @@ from Blog.views import indexPage
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('blog/', include('Blog.urls')),
+    path('posts/', include('Posts.urls')),
 ]
