@@ -15,6 +15,9 @@ class Post(models.Model):
     def get_absolute_url(self):
         return reverse("posts:post_detail", kwargs={"detail_id": self.id})
 
+    def get_edit_url(self):
+        return reverse("posts:post_update", kwargs={"detail_id": self.id})
+
     class Meta():
         verbose_name = '上传信息'
         verbose_name_plural = verbose_name
