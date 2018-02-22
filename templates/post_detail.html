@@ -12,7 +12,11 @@
     <div class="blog-post">
 
         <h2 class="blog-post-title">{{ instance.title }}</h2>
-        <p class="blog-post-meta">{{ instance.timestamp }} by <a href="#">Peco</a></p>
+        {% if instance.draft %} <span style="color:red;"> Draft </span>{% endif %}
+        <p class="blog-post-meta">{{ instance.publish }} by <a href="#">{{ instance.user }}</a></p>
+        <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}">
+        Share on Facebook
+        </a>
         <p>摘要</p>
         <hr>
         <p>

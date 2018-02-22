@@ -1,15 +1,21 @@
 from django.contrib import messages
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404, redirect, Http404
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .models import Post
 from .forms import PostForm
 
 
 # Create your views here.
 def post_create(request):
-    form = PostForm(request.POST or None)
+    if not request.user.is_staff or not request.user.is_superuser:
+        raise Http404
+    if not request.user.is_authenticated:
+        raise Http404
+    form = PostForm(request.POST or None, request.FILES or None)
     if form.is_valid():
         instance = form.save(commit=False)
+        instance.user = request.user
         instance.save()
         messages.success(request, "<a href='#'>Successfully created</a>", extra_tags="html_safe")
         return HttpResponseRedirect(instance.get_absolute_url())
@@ -22,8 +28,11 @@ def post_create(request):
     return render(request, "post_form.html", context)
 
 
-def post_detail(request, detail_id=None):
-    instance = get_object_or_404(Post, id=detail_id)
+def post_detail(request, id=None):
+    instance = get_object_or_404(Post, id=id)
+    if instance.draft:
+        if not request.user.is_staff or not request.user.is_superuser:
+            raise Http404
     context = {
         "title": instance.title,
         "instance": instance
@@ -32,19 +41,27 @@ def post_detail(request, detail_id=None):
 
 
 def post_list(request):
-    queryset = Post.objects.all()
+    queryset_list = Post.objects.active().order_by("-timestamp")
+    if request.user.is_staff or request.user.is_superuser:
+        queryset_list = Post.objects.all().order_by("-timestamp")
+    paginator = Paginator(queryset_list, 3)
+    page_request_var = 'page'
+    page = request.GET.get(page_request_var)
+    queryset = paginator.get_page(page)
 
     context = {
         "title": "Peco的首页",
-        "object_list": queryset
+        "object_list": queryset,
+        "page_request_var": page_request_var
     }
-
     return render(request, "index.html", context)
 
 
-def post_update(request, detail_id=None):
-    instance = get_object_or_404(Post, id=detail_id)
-    form = PostForm(request.POST or None, instance=instance)
+def post_update(request, id=None):
+    if not request.user.is_staff or not request.user.is_superuser:
+        raise Http404
+    instance = get_object_or_404(Post, id=id)
+    form = PostForm(request.POST or None, request.FILES or None, instance=instance)
     if form.is_valid():
         instance = form.save(commit=False)
         instance.save()
@@ -59,8 +76,10 @@ def post_update(request, detail_id=None):
     return render(request, "post_form.html", context)
 
 
-def post_delete(request, detail_id=None):
-    instance = get_object_or_404(Post, id=detail_id)
+def post_delete(request, id=None):
+    if not request.user.is_staff or not request.user.is_superuser:
+        raise Http404
+    instance = get_object_or_404(Post, id=id)
     instance.delete()
     messages.success(request, "Successfully deleted")
     return redirect("posts:post_list")
