@@ -11,7 +11,7 @@ class PostManager(models.Manager):
 
 
 def upload_location(instance, filename):
-    return "%s/%s" % (instance.id, filename)
+    return "{}/{}".format(instance.id, filename)
 
 
 # Create your models here.

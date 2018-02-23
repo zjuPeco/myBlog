@@ -19,9 +19,7 @@
         </a>
         <p>摘要</p>
         <hr>
-        <p>
-        {{ instance.content|linebreaks }}
-        </p>
+        <div class="content-markdown">{{ instance.content }}</div>
     </div>
 </div>
 {% endblock content %}

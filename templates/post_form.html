@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block styles %}<link rel="stylesheet" href="{% static 'css/index.css' %}">{% endblock styles %}
-
+{% block head_extra %}{{ form.media }} {% endblock head_extra %}
 {% block content %}
 <div class="container">
     <form method="POST" action="" enctype="multipart/form-data">{% csrf_token %}

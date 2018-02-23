@@ -21,6 +21,13 @@
   <div class="album py-5 bg-light">
     <div class="container">
 
+      <form method="GET" action="">
+          <input type="text" name="q" placeholder="搜索文章" value="{{ request.GET.q }}"/>
+          <input type="submit" value="搜索"/>
+      </form>
+
+      <br/>
+
       <div class="row">
 
           {% for obj in object_list %}
@@ -56,8 +63,8 @@
           <div class="pagination">
             <span class="step-links">
                 {% if object_list.has_previous %}
-                    <a href="?{{ page_request_var }}=1">&laquo; 首页</a>
-                    <a href="?page={{ object_list.previous_page_number }}">前一页</a>
+                    <a href="?{{ page_request_var }}=1{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">&laquo; 首页</a>
+                    <a href="?{{ page_request_var }}={{ object_list.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">前一页</a>
                 {% endif %}
 
                 <span class="current">
@@ -65,8 +72,8 @@
                 </span>
 
                 {% if object_list.has_next %}
-                    <a href="?{{ page_request_var }}={{ object_list.next_page_number }}">后一页</a>
-                    <a href="?{{ page_request_var }}={{ object_list.paginator.num_pages }}">尾页 &raquo;</a>
+                    <a href="?{{ page_request_var }}={{ object_list.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">后一页</a>
+                    <a href="?{{ page_request_var }}={{ object_list.paginator.num_pages }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">尾页 &raquo;</a>
                 {% endif %}
             </span>
           </div>
