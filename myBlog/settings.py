@@ -40,8 +40,19 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'Blog.apps.BlogConfig',
     'Posts.apps.PostsConfig',
+    'markdown_deux',
+    'crispy_forms',
+    'pure_pagination',
     'pagedown'
 ]
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+PAGINATION_SETTINGS = {
+    'PAGE_RANGE_DISPLAYED': 10,
+    'MARGIN_PAGES_DISPLAYED': 2,
+    'SHOW_FIRST_PAGE_WHEN_INVALID': True,
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

@@ -9,6 +9,7 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     {% block styles %}{% endblock styles %}
+    <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
     {% block head_extra %} {% endblock head_extra %}
     <title>{{ title }}</title>
   </head>
@@ -84,7 +85,19 @@
                 var contentMarked = marked(content);
                 $(this).html(contentMarked);
             });
+
+            $(".wmd-panel").each(function () {
+                $(this).removeClass("wmd-panel");
+                $(this).addClass("important");
+            });
+
+            $(".post-detail-item img").each(function () {
+                $(this).addClass("carousel-inner img-responsive img-rounded");
+            });
+
+
         });
     </script>
+    {% block scripts %}{% endblock scripts %}
   </body>
 </html>

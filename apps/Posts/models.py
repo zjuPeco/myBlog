@@ -3,6 +3,8 @@ from django.urls import reverse
 from django.db.models.signals import pre_save
 from django.conf import settings
 from django.utils.text import slugify
+from django.utils.safestring import mark_safe
+from markdown_deux import markdown
 
 
 class PostManager(models.Manager):
@@ -41,6 +43,11 @@ class Post(models.Model):
 
     def get_edit_url(self):
         return reverse("posts:post_update", kwargs={"id": self.id})
+
+    def get_markdown(self):
+        content = self.content
+        markdown_text = markdown(content)
+        return mark_safe(markdown_text)
 
     class Meta():
         verbose_name = '上传信息'

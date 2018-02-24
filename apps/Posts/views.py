@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect, Http404
 from django.db.models import Q
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from pure_pagination import Paginator, EmptyPage, PageNotAnInteger
 from .models import Post
 from .forms import PostForm
 
@@ -52,10 +52,15 @@ def post_list(request):
             Q(content__icontains=query) |
             Q(user__username__icontains=query)
         )
-    paginator = Paginator(queryset_list, 3)
+
     page_request_var = 'page'
-    page = request.GET.get(page_request_var)
-    queryset = paginator.get_page(page)
+    try:
+        page = request.GET.get(page_request_var, 1)
+    except PageNotAnInteger:
+        page = 1
+
+    p = Paginator(queryset_list, 3, request=request)
+    queryset = p.page(page)
 
     context = {
         "title": "Peco的首页",
