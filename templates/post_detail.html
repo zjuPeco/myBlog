@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% load static %}
+{% load crispy_forms_filters %}
 
 {% block styles %}
     <link rel="stylesheet" href="{% static 'css/index.css' %}">
@@ -20,6 +21,54 @@
         <p>摘要</p>
         <hr>
         <div class="post-detail-item">{{ instance.get_markdown }}</div>
+        <hr/>
+        <div>
+            <p class="lead">评论</p>
+            <form method="POST" action=".">{% csrf_token %}
+                {{ comment_form|crispy }}
+                <input type="submit" value="发表评论" class="btn btn-default"/>
+            </form>
+            <hr/>
+            {% if instance.comments %}
+                {% for comment in instance.comments %}
+                    <blockquote class="blockquote comment-border">
+                        <p class="mb-0">{{ comment.content }}</p>
+                        <footer class="blockquote-footer">
+                            {{ comment.user }} | {{ comment.timestamp|timesince }}之前 | {% if comment.children.count > 0 %}{{ comment.children.count }}条回复 | <a href={{ comment.get_absolute_url }}> 查看 |</a>{% endif %}<a href="#" class="comment-reply-btn"> 回复 </a>
+                        </footer>
+                        <div class="comment-reply" style="display: none">
+                            {% for child_comment in comment.children %}
+                                <blockquote class="blockquote comment-border">
+                                    <p class="mb-0">{{ child_comment.content }}</p>
+                                    <footer class="blockquote-footer">
+                                        {{ child_comment.user }} | {{ child_comment.timestamp|timesince }}之前
+                                    </footer>
+                                </blockquote>
+                            {% endfor %}
+
+                            <form method="POST" action=".">{% csrf_token %}
+                                {{ comment_form|crispy }}
+                                <input type="hidden" name="parent_id" value="{{ comment.id }}"/>
+                                <input type="submit" value="回复" class="btn btn-default"/>
+                            </form>
+                        </div>
+                    </blockquote>
+                    <hr/>
+                {% endfor %}
+            {% endif %}
+        </div>
     </div>
 </div>
 {% endblock content %}
+
+{% block scripts %}
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".comment-reply-btn").click(function (event) {
+            event.preventDefault();
+            console.log($(this).parent().next(".comment-reply"));
+            $(this).parent().next(".comment-reply").fadeToggle();
+        });
+    });
+</script>
+{% endblock scripts %}

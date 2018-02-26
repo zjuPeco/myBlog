@@ -38,8 +38,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # local apps
     'Blog.apps.BlogConfig',
     'Posts.apps.PostsConfig',
+    'Comments.apps.CommentsConfig',
+
+    # third party
     'markdown_deux',
     'crispy_forms',
     'pure_pagination',

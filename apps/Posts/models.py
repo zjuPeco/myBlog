@@ -4,7 +4,10 @@ from django.db.models.signals import pre_save
 from django.conf import settings
 from django.utils.text import slugify
 from django.utils.safestring import mark_safe
+from django.contrib.contenttypes.models import ContentType
+
 from markdown_deux import markdown
+from Comments.models import Comment
 
 
 class PostManager(models.Manager):
@@ -49,9 +52,19 @@ class Post(models.Model):
         markdown_text = markdown(content)
         return mark_safe(markdown_text)
 
+    @property
+    def comments(self):
+        qs = Comment.objects.filter_by_instance(self)
+        return qs
+
+    @property
+    def get_content_type(self):
+        content_type = ContentType.objects.get_for_model(self.__class__)
+        return content_type
+
     class Meta():
-        verbose_name = '上传信息'
-        verbose_name_plural = verbose_name
+        # verbose_name = '博客文章'
+        # verbose_name_plural = verbose_name
         ordering = ["-timestamp", "-updated"]
 
 
