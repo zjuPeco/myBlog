@@ -3,6 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect, Http404
 from django.db.models import Q
 from pure_pagination import Paginator, EmptyPage, PageNotAnInteger
+from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
 from .models import Post
 from .forms import PostForm
@@ -12,7 +13,7 @@ from Comments.models import Comment
 
 # Create your views here.
 def post_create(request):
-    if not request.user.is_staff or not request.user.is_superuser:
+    if not request.user.is_staff:
         raise Http404
     if not request.user.is_authenticated:
         raise Http404
@@ -35,7 +36,7 @@ def post_create(request):
 def post_detail(request, id=None):
     instance = get_object_or_404(Post, id=id)
     if instance.draft:
-        if not request.user.is_staff or not request.user.is_superuser:
+        if request.user !=  instance.user and not request.user.is_staff and not request.user.is_superuser:
             raise Http404
 
     initial_data = {
@@ -43,7 +44,7 @@ def post_detail(request, id=None):
         "object_id": instance.id
     }
     comment_form = CommentForm(request.POST or None, initial=initial_data)
-    if comment_form.is_valid():
+    if comment_form.is_valid() and request.user.is_authenticated:
         c_type = comment_form.cleaned_data.get("content_type")
         content_type = ContentType.objects.get(model=c_type)
         parent_obj = None
@@ -106,9 +107,14 @@ def post_list(request):
 
 
 def post_update(request, id=None):
-    if not request.user.is_staff or not request.user.is_superuser:
-        raise Http404
+    # if not request.user.is_staff or not request.user.is_superuser:
+    #     raise Http404
     instance = get_object_or_404(Post, id=id)
+    if instance.user != request.user:
+        response = HttpResponse("没有权限进行该操作")
+        response.status_code = 403
+        return response
+
     form = PostForm(request.POST or None, request.FILES or None, instance=instance)
     if form.is_valid():
         instance = form.save(commit=False)
@@ -124,10 +130,22 @@ def post_update(request, id=None):
     return render(request, "post_form.html", context)
 
 
+@login_required(login_url='accounts:login')
 def post_delete(request, id=None):
-    if not request.user.is_staff or not request.user.is_superuser:
-        raise Http404
+    # if not request.user.is_staff or not request.user.is_superuser:
+    #     raise Http404
     instance = get_object_or_404(Post, id=id)
-    instance.delete()
-    messages.success(request, "Successfully deleted")
-    return redirect("posts:post_list")
+    if instance.user != request.user:
+        response = HttpResponse("没有权限进行该操作")
+        response.status_code = 403
+        return response
+
+    if request.method == 'POST':
+        instance.delete()
+        messages.success(request, "Successfully deleted")
+        return redirect("posts:post_list")
+
+    context = {
+        'object': instance
+    }
+    return render(request, "confirm_delete.html", context)

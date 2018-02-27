@@ -23,6 +23,7 @@ def upload_location(instance, filename):
 class Post(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, default=1, on_delete=models.CASCADE)
     title = models.CharField(max_length=120)
+    github_url = models.CharField(max_length=200, null=True, blank=True)
     # slug = models.SlugField(unique=True)
     image = models.ImageField(upload_to=upload_location,
                               null=True, blank=True,

@@ -14,27 +14,48 @@
 
         <h2 class="blog-post-title">{{ instance.title }}</h2>
         {% if instance.draft %} <span style="color:red;"> Draft </span>{% endif %}
-        <p class="blog-post-meta">{{ instance.publish }} by <a href="#">{{ instance.user }}</a></p>
-        <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}">
-        Share on Facebook
-        </a>
+        <p class="blog-post-meta">{{ instance.publish }} by <a href="#">{{ instance.user }}</a>
+        {% if instance.github_url %}
+            |
+            <a href="{{ instance.github_url }}" target="_blank">
+                <span class="badge badge-secondary"><i class="fa fa-github"></i> 源代码</span>
+            </a>
+        {% endif %}
+        {% if instance.user == request.user %}
+            |
+            <a href="{% url 'posts:post_update' instance.id%}">
+                <span class="badge badge-primary">编辑</span>
+            </a>
+            |
+            <a href="{% url 'posts:post_delete' instance.id%}">
+                <span class="badge badge-danger">删除</span>
+            </a>
+        {% endif %}
+        </p>
         <p>摘要</p>
         <hr>
         <div class="post-detail-item">{{ instance.get_markdown }}</div>
         <hr/>
         <div>
             <p class="lead">评论</p>
-            <form method="POST" action=".">{% csrf_token %}
-                {{ comment_form|crispy }}
-                <input type="submit" value="发表评论" class="btn btn-default"/>
-            </form>
+            {% if request.user.is_authenticated %}
+                <form method="POST" action=".">{% csrf_token %}
+                    {{ comment_form|crispy }}
+                    <input type="submit" value="发表评论" class="btn btn-default"/>
+                </form>
+            {% else %}
+                <p><a href="{% url 'accounts:login' %}">登陆</a>后可评论</p>
+            {% endif %}
             <hr/>
             {% if instance.comments %}
                 {% for comment in instance.comments %}
                     <blockquote class="blockquote comment-border">
                         <p class="mb-0">{{ comment.content }}</p>
                         <footer class="blockquote-footer">
-                            {{ comment.user }} | {{ comment.timestamp|timesince }}之前 | {% if comment.children.count > 0 %}{{ comment.children.count }}条回复 | <a href={{ comment.get_absolute_url }}> 查看 |</a>{% endif %}<a href="#" class="comment-reply-btn"> 回复 </a>
+                            {{ comment.user }} | {{ comment.timestamp|timesince }}之前
+                            {% if comment.children.count > 0 %} | {{ comment.children.count }}条回复{% endif %}
+                             | <a href={{ comment.get_absolute_url }}> 查看</a>
+                             | <a href="#" class="comment-reply-btn"> 回复 </a>
                         </footer>
                         <div class="comment-reply" style="display: none">
                             {% for child_comment in comment.children %}
@@ -46,11 +67,15 @@
                                 </blockquote>
                             {% endfor %}
 
-                            <form method="POST" action=".">{% csrf_token %}
-                                {{ comment_form|crispy }}
-                                <input type="hidden" name="parent_id" value="{{ comment.id }}"/>
-                                <input type="submit" value="回复" class="btn btn-default"/>
-                            </form>
+                            {% if request.user.is_authenticated %}
+                                <form method="POST" action=".">{% csrf_token %}
+                                    {{ comment_form|crispy }}
+                                    <input type="hidden" name="parent_id" value="{{ comment.id }}"/>
+                                    <input type="submit" value="回复" class="btn btn-default"/>
+                                </form>
+                            {% else %}
+                                <p><a href="{% url 'accounts:login' %}">登陆</a>后可评论</p>
+                            {% endif %}
                         </div>
                     </blockquote>
                     <hr/>

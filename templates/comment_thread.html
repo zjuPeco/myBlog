@@ -28,12 +28,15 @@
                         </footer>
                     </blockquote>
                 {% endfor %}
-
-                <form method="POST" action=".">{% csrf_token %}
-                    {{ comment_form|crispy }}
-                    <input type="hidden" name="parent_id" value="{{ comment.id }}"/>
-                    <input type="submit" value="回复" class="btn btn-default"/>
-                </form>
+                {% if request.user.is_authenticated %}
+                    <form method="POST" action=".">{% csrf_token %}
+                        {{ comment_form|crispy }}
+                        <input type="hidden" name="parent_id" value="{{ comment.id }}"/>
+                        <input type="submit" value="回复" class="btn btn-default"/>
+                    </form>
+                {% else %}
+                    <p><a href="{% url 'accounts:login' %}">登陆</a>后可评论</p>
+                {% endif %}
             </div>
         </blockquote>
     </div>

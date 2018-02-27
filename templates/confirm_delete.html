@@ -14,7 +14,7 @@
         <h1>删除操作确认</h1>
         <form method="POST" action=".">{% csrf_token %}
             <p>
-                确定要删除这条评论吗？
+                确定要删除吗？
             </p>
             <input type="submit" value="确定" class="btn btn-warning"/>
             <a href="{{ object.get_absolute_url }}" class="btn btn-default">取消</a>
