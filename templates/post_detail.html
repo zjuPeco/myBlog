@@ -32,9 +32,9 @@
             </a>
         {% endif %}
         </p>
-        <p>摘要</p>
+        <p><strong>摘要</strong>: {{ instance.abstract }}</p>
         <hr>
-        <div class="post-detail-item">{{ instance.get_markdown }}</div>
+        <div class="post-detail-item content-markdown">{{ instance.get_markdown }}</div>
         <hr/>
         <div>
             <p class="lead">评论</p>
@@ -94,6 +94,8 @@
             console.log($(this).parent().next(".comment-reply"));
             $(this).parent().next(".comment-reply").fadeToggle();
         });
+
+
     });
 </script>
 {% endblock scripts %}

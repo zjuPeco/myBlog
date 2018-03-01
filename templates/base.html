@@ -9,6 +9,13 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     {% block styles %}{% endblock styles %}
+    <style type="text/css">
+        .content-img{
+            display: inline-block;
+            height: auto;
+            max-width: 100%;
+        }
+    </style>
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     {% block head_extra %} {% endblock head_extra %}
     <title>{{ title }}</title>
@@ -19,15 +26,18 @@
         <div class="container">
           <div class="row">
             <div class="col-sm-8 col-md-7 py-4">
-              <h4 class="text-white">About</h4>
-              <p class="text-muted">Add some information about the album below, the author, or any other background context. Make it a few sentences long so folks can pick up some informative tidbits. Then, link them off to some social networking sites or contact information.</p>
+              <h4 class="text-white">简介</h4>
+              <p class="text-muted">
+                  这是一个基于django, jQuery和Bootstrap建立的网站，主要用于展示一些个人作品。<br/>
+                  未登录用户只能进行浏览，登陆用户可以进行评论。<br/>
+                  如果想在该网站上发表文章，请联系Peco。
+              </p>
             </div>
             <div class="col-sm-4 offset-md-1 py-4">
-              <h4 class="text-white">Contact</h4>
+              <h4 class="text-white">在更多地方关注我</h4>
               <ul class="list-unstyled">
-                <li><a href="#" class="text-white">Follow on Twitter</a></li>
-                <li><a href="#" class="text-white">Like on Facebook</a></li>
-                <li><a href="#" class="text-white">Email me</a></li>
+                <li class="text-white"><a href="http://blog.csdn.net/zjuPeco">我的CSDN主页：</a>记录着一些平时的知识积累</li>
+                <li class="text-white"><a href="https://tianchi.aliyun.com/science/scientistDetail.htm?spm=5176.100153.0.0.74f31e77M6EPAk&userId=1095279145911">我的天池</a>：热衷于打比赛，以后会参加更多的赛事~</li>
               </ul>
             </div>
           </div>
@@ -78,10 +88,13 @@
     <footer class="text-muted">
       <div class="container">
         <p class="float-right">
-          <a href="#">Back to top</a>
+          <a href="#">返回顶端</a>
         </p>
-        <p>Album example is &copy; Bootstrap, but please download and customize it for yourself!</p>
-        <p>New to Bootstrap? <a href="../../">Visit the homepage</a> or read our <a href="../../getting-started/">getting started guide</a>.</p>
+        <p>联系我：</p>
+        <p>
+            我的邮箱地址：zjupeco@gmail.com | zjupeco@qq.com<br/>
+            我的QQ：409226624
+        </p>
       </div>
     </footer>
 
@@ -100,7 +113,8 @@
             });
 
             $(".post-detail-item img").each(function () {
-                $(this).addClass("carousel-inner img-responsive img-rounded");
+                // $(this).addClass("carousel-inner img-responsive img-rounded");
+                $(this).addClass("content-img");
             });
 
         });

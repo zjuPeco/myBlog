@@ -16,26 +16,28 @@ class PostManager(models.Manager):
 
 
 def upload_location(instance, filename):
-    return "{}/{}".format(instance.id, filename)
+    return "{0}/{1}".format(int(instance.id), filename)
 
 
 # Create your models here.
 class Post(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, default=1, on_delete=models.CASCADE)
-    title = models.CharField(max_length=120)
-    github_url = models.CharField(max_length=200, null=True, blank=True)
+    title = models.CharField(max_length=120, verbose_name="题目")
+    abstract = models.CharField(max_length=300, null=True, blank=True, verbose_name="摘要")
+    github_url = models.CharField(max_length=200, null=True, blank=True, verbose_name="github地址")
     # slug = models.SlugField(unique=True)
     image = models.ImageField(upload_to=upload_location,
                               null=True, blank=True,
                               width_field="width_field",
-                              height_field="height_field")
+                              height_field="height_field",
+                              verbose_name="封面图")
     height_field = models.IntegerField(default=0)
     width_field = models.IntegerField(default=0)
-    draft = models.BooleanField(default=False)
-    publish = models.DateField(auto_now=False, auto_now_add=False)
-    content = models.TextField()
-    timestamp = models.DateTimeField(auto_now=False, auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True, auto_now_add=False)
+    draft = models.BooleanField(default=False, verbose_name="草稿")
+    publish = models.DateField(auto_now=False, auto_now_add=False, verbose_name="发表日期")
+    content = models.TextField(verbose_name="文章内容")
+    timestamp = models.DateTimeField(auto_now=False, auto_now_add=True, verbose_name="生成时间")
+    updated = models.DateTimeField(auto_now=True, auto_now_add=False, verbose_name="更新时间")
 
     objects = PostManager()
 
@@ -50,8 +52,9 @@ class Post(models.Model):
 
     def get_markdown(self):
         content = self.content
-        markdown_text = markdown(content)
-        return mark_safe(markdown_text)
+        # markdown_text = markdown(content)
+        # return mark_safe(markdown_text)
+        return content
 
     @property
     def comments(self):
