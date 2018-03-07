@@ -12,6 +12,10 @@ from Comments.models import Comment
 
 
 # Create your views here.
+def personal_statement(request):
+    return render(request, "personal_statement.html", {})
+
+
 def post_create(request):
     if not request.user.is_staff:
         raise Http404

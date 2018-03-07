@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
+    <link rel="stylesheet" href="{% static 'css/blog.css' %}">
+{% endblock styles %}
+
+{% block content %}
+<div class="container">
+    <h2 style="padding-top: 5%">关于Peco</h2>
+    <hr/>
+    <div class="row">
+        <div class="col-sm-3">
+            <img src="http://zju-peco.oss-cn-shanghai.aliyuncs.com/blog-pictures/%E4%B8%AA%E4%BA%BA/IMG_20161228_190219%20(2).jpg" alt="man" class="img-responsive section-img" style="border-radius:50%" width="200px">
+        </div>
+
+        <div class="col-sm-9">
+            <h4><strong>陈 权</strong></h4>
+            <p>机械专业的程序猿，热衷于用代码描绘自己脑中的世界。</p>
+
+            <br/>
+
+            <h4><strong>待过的地方</strong></h4>
+            <ul>
+                <li>土生土长的杭州人，口味比较清淡</li>
+                <li>本科期间就读重庆大学，从此学会了吃辣</li>
+                <li>研究生阶段重返杭州，现就读于浙江大学，辣不辣都吃</li>
+            </ul>
+
+            <br/>
+
+            <h4><strong>爱好</strong></h4>
+            <ul>
+                <li><strong>热爱竞赛</strong></li>
+                从小参加各类竞赛，一直享受于竞赛过程当中的自我提升和紧张刺激。<br/>
+                上大学之前，小打小闹，参加过数学竞赛、航海模型大赛、航空模型大赛、无线电测向大赛等等，成绩尚可<br/>
+                本科期间致力于数学方面竞赛，曾获2014届高教杯全国大学生数学竞赛全国二等奖、2015届美国大学生数学建模竞赛Meritorious Winner、第五届全国大学生数学竞赛（非数学类）预赛省级二等奖等。
+                当然也参加过自己的老本行相关的竞赛，比如第十届周培源力学竞赛全国三等奖、无碳小车竞赛校级二等奖等等。<br/>
+                硕士期间一直在帮导师干活，不过也忙里偷闲，参加了一些天池大数据的竞赛，在气象领航无人机线路优化比赛中斩获3/1646。<br/>
+                每次竞赛对我而言都是向一个新的领域发起挑战，成功之后，成就感爆棚。
+                <li><strong>热爱运动</strong></li>
+                再忙也会抽时间来健身。总是告诉自己只要平板支撑做到多少多少分钟，明天就会怎么样怎么样~
+                经常会和驴友们去的徒步登山，折磨一下自己的膝盖。
+                <li><strong>热爱美食</strong></li>
+                胃口好的不得了，每次聚餐都是战斗到最后的那个人。
+            </ul>
+
+            <br/>
+
+            <h4><strong>现在在做的事</strong></h4>
+            <p>
+                实验室目前在做控制系统软件开发相关的工作，主要是飞机定位器的运动控制这一块。
+                但个人更喜欢机器学习相关的东西，一直有着用机器学习来改善制造业的想法。
+                因此对各类和实际场景相关的算法竞赛有着极大的兴趣。
+            </p>
+
+        </div>
+    </div>
+    <hr/>
+</div>
+
+
+{% endblock content %}
